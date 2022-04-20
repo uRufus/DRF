@@ -8,8 +8,8 @@ class Project(models.Model):
     repo = models.URLField()
     users = models.ManyToManyField(User)
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 
 class ToDo(models.Model):

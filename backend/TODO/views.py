@@ -11,23 +11,23 @@ from .serializer import ProjectModelSerializer, ToDoModelSerializer
 # названия проекта;
 
 
-class ToDoLimitOffsetPagination(LimitOffsetPagination):
-    default_limit = 1
+# class ToDoLimitOffsetPagination(LimitOffsetPagination):
+#     default_limit = 1
 
 
 class ProjectModelViewSet(ModelViewSet):
     serializer_class = ProjectModelSerializer
     queryset = Project.objects.all()
-    pagination_class = ToDoLimitOffsetPagination
-    pagination_class.default_limit = 10
+    # pagination_class = ToDoLimitOffsetPagination
+    # pagination_class.default_limit = 10
     filterset_class = ProjectFilter
 
 
 class ToDoModelViewSet(ModelViewSet):
     serializer_class = ToDoModelSerializer
     queryset = ToDo.objects.all()
-    pagination_class = ToDoLimitOffsetPagination
-    pagination_class.default_limit = 20
+    # pagination_class = ToDoLimitOffsetPagination
+    # pagination_class.default_limit = 20
     filterset_class = ToDoFilter
 
     def destroy(self, request, *args, **kwargs):
