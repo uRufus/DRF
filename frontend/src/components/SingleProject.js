@@ -19,7 +19,7 @@ const ProjectItem = ({project}) => {
 
 const SingleProjectList = ({projects}) => {
     var {pk} = useParams()
-    var filteredProjects = projects.filter((project) => project.name.includes(pk))
+    var filteredProjects = projects.filter((project) => project.id == pk)
 
     return (
             <table>

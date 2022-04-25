@@ -4,7 +4,7 @@ const ProjectItem = ({project}) => {
     return (
         <tr>
              <td>
-                <Link to= {`/projects/${project.name}`}>{project.name}</Link>
+                <Link to= {`/projects/${project.id}`}>{project.name}</Link>
             </td>
             <td>
                 {project.repo}
