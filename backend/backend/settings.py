@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'rest_framework',
     'users',
     'TODO',
@@ -141,6 +142,7 @@ CORS_ALLOWED_ORIGINS = [
 REST_FRAMEWORK = {
 # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 # 'PAGE_SIZE': 100,
+'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.QueryParameterVersioning',
 'DEFAULT_RENDERER_CLASSES': [
 'rest_framework.renderers.JSONRenderer',
 'rest_framework.renderers.BrowsableAPIRenderer',],
@@ -150,4 +152,15 @@ REST_FRAMEWORK = {
                                     'rest_framework.authentication.BasicAuthentication',
                                    'rest_framework.authentication.TokenAuthentication',
                                    ],
+}
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {'type': 'basic'},
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
 }
