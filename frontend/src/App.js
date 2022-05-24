@@ -11,6 +11,7 @@ import Footer from './components/Footer.js'
 import {HashRouter, BrowserRouter, Route, Routes, Link, Navigate, useLocation} from 'react-router-dom'
 import LoginForm from './components/Auth.js'
 import ProjectForm from './components/ProjectForm.js'
+import ToDoForm from './components/ToDoForm.js'
 import Cookies from 'universal-cookie';
 
 
@@ -95,6 +96,38 @@ class App extends React.Component {
         }).catch(error => console.log(error))
     }
 
+    filterProject(name) {
+        const headers = this.get_headers()
+        axios.get('http://127.0.0.1:8000/api/project', {headers})
+            .then(response => {
+                let projects = response.data
+                this.setState({
+                'projects': this.state.projects.filter((project)=>project.name in name)
+                })
+            }).catch(error => console.log(error))
+    }
+
+    createToDo (project, user, text) {
+        let headers = this.get_headers()
+        let p = parseInt(project)
+        let u = parseInt(user)
+        axios
+            .post('http://127.0.0.1:8000/api/ToDo/', {'project': p, 'created_by': u, 'text': text, 'active': true},{headers})
+            .then(response => {
+                this.getData()
+        })
+        .catch(error => {console.log(error)})
+    }
+
+    deleteToDo(id) {
+        const headers = this.get_headers()
+        axios
+            .patch(`http://127.0.0.1:8000/api/ToDo/${id}/`, {'id': id, 'active': false}, {headers})
+            .then(response => {
+                this.load_data()
+        }).catch(error => console.log(error))
+    }
+
     load_data() {
     const headers = this.get_headers()
     axios.get('http://127.0.0.1:8000/api/users', {headers})
@@ -148,6 +181,9 @@ class App extends React.Component {
                                 <Link to='/todos'>ToDos</Link>
                             </li>
                             <li>
+                                <Link to='/todos/create'>New ToDo</Link>
+                            </li>
+                            <li>
                                 {this.is_authenticated() ? <button
                                     onClick={()=>this.logout()}>Logout</button> : <Link to='/login'>Login</Link>}
                             </li>
@@ -156,10 +192,13 @@ class App extends React.Component {
 
                     <Routes>
                         <Route exact path='/' element={<UserList users={this.state.users} /> } />
-                        <Route exact path='/projects' element={<ProjectList projects={this.state.projects} deleteProject={(id)=>this.deleteProject(id)} />} />
+                        <Route exact path='/projects' element={<ProjectList projects={this.state.projects}
+                            deleteProject={(id)=>this.deleteProject(id)}
+                            filterProject={(name)=>this.filterProject(name)}/>} />
                         <Route exact path='/projects/create' element={<ProjectForm users={this.state.users}  createProject={(name, repo, users)=>this.createProject(name, repo, users)} />} />
                         <Route exact path='/projects/:pk' element={<SingleProjectList projects={this.state.projects} />} />
-                        <Route exact path='/todos' element={<ToDoList todos={this.state.todos} />} />
+                        <Route exact path='/todos' element={<ToDoList todos={this.state.todos} deleteToDo={(id)=>this.deleteToDo(id)}/>} />
+                        <Route exact path='/todos/create' element={<ToDoForm users={this.state.users}  projects={this.state.projects} createToDo={(project, user, text)=>this.createToDo(project, user, text)} />} />
                         <Route exact path='/login' element={<LoginForm get_token={(username, password)=> this.get_token(username, password)} />} />
                         <Route path='*' element={<NotFound404 />} />
                     </Routes>
